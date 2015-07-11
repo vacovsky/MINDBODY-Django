@@ -8,7 +8,7 @@ https://mbodjango.herokuapp.com
 ###### (If someone wants to make a quick setup for windows, that would be helpful.)
 
 
-### Step 1. Create a virtual environment in the root fof the project folder
+### Step 1. Create a virtual environment in the root of the project folder
 
 ```
 virtualenv -p /usr/bin/python3.4 venv
