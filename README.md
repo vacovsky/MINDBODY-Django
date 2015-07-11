@@ -1,4 +1,4 @@
-# mboapi-django
+# MINDBODY Django Demo
 A demonstration showing how to build an integration with the MINDBODY SOAP API using Python 3 and Django 1.8.  I did this in my spare time, so bugs are likely.  I'll try to fix them as I find them.
 
 https://mbodjango.herokuapp.com
