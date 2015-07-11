@@ -57,6 +57,7 @@ APPLICATION_SECRET = ""
 
 ######While in your virtual environment, run
 ```
+python3 manage.py syncdb
 python3 manage.py runserver
 ```
 
