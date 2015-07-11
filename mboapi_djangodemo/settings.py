@@ -97,7 +97,7 @@ if (socket.gethostname() != 'vacro' ) and (socket.gethostname() != 'joe-VirtualB
     DEBUG = False
     STATIC_ROOT = 'staticfiles'
     STATIC_URL = '/static/'
-    STATICFILES_DIRS = (os.path.join(BASE_DIR, '../mboapi_djangodemo/static'),)
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 else:
     LOCAL_PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))

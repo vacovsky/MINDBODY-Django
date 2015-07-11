@@ -2,11 +2,25 @@
 {% block content %}
   <h1>About This Demo</h1>
   <div>
+<hr/>
+    <h4>Disclaimer</h4>
+    <p>While I do work for MINDBODY, this project was written entirely outside of my day job, and is not a product of MINDBODY.  The code may not fit all convensions and proven patterns, as it was a learning project for me as much as it was a demonstration for any who might find it useful.  If someone out there is a Django pro with a MINDBODY API account, please feel free to improve on it and send pull requests.</p><hr/>
+    <h4>Credits and Sources</h4>
     <p>This demo site uses <a href="https://www.djangoproject.com/">Django 1.8 </a> as the web framework, and <a a href="https://www.python.org/download/releases/3.0/">Python 3</a> as the base language.  </p>
     <p>The project's source code can be found <strong><a href="https://github.com/vacoj/mbodjangodemo">here</a></strong>, and the work is free for just about any use.  Please read the details of the <a href="http://choosealicense.com/licenses/mit/">MIT License</a> to learn more.</p>
-    <p>The original HTML/CSS template used for this site was obtained from <a href="http://www.gettemplate.com/demo/progressus/"> gettemplate</a>.</p>
-    <p>Finally, to actually make any use of this project, you're going to need to have access to the <a href="https://developers.mindbodyonline.com">MINDBODY SOAP API</a>.  Once signed up, using this project is as easy as plugging your source credentials into the right place.</p>
+    <p>The original HTML/CSS template used for this site, entitled Progressus, was obtained from <a href="http://www.gettemplate.com/demo/progressus/"> gettemplate</a> - kudos to the designer, Sergey Pozhilov.  It has been modified by me to fit the needs of this project, and is licensed under <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons 3.0</a>.</p><hr/>
+    <h4>Getting an API Account</h4>
+    <p>Finally, to actually make any use of this project, you're going to need to have access to the <a href="https://developers.mindbodyonline.com">MINDBODY SOAP API</a>.  Once signed up, using this project is as easy as plugging your source credentials into the right place.</p><hr/>
+    <h4>Issues</h4>
+    <p>I have had some trouble getting Bootstrap static files to play nice with Heroku, my host for this site (free single dyno), and because of that, some service pages may not work as intended.  They work perfectly fine when running locally, but in the event someone wants to see them on my very low-power demo site, the links are here:</p>
+    
+    <li><a href="/web/services/appointment">Appointment Service</li></a>
+    <li><a href="/web/services/class">Class Service</li></a>
+    <li><a href="/web/services/client">Client Service</li></a>
+    <li><a href="/web/services/site">Site Service</li></a>
+    <li><a href="/web/services/staff">Staff Service</li></a>
   </div>
+  <hr/>
   <p>
     <div class="col-md-6 widget">
       <h3 class="widget-title" >License</h3>
