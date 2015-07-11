@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h2>Our Staff | {{ page }}</h2>
+  {% for staff in staffList %}
+    {% if staff.ID > 0 %}
+      <hr>
+        <div class="staff">
+          <p>
+            {% if staff.ImageURL != "" %}
+              <img src="{{ staff.ImageURL }}" alt="">
+            {% endif %}
+            <h3>{{ staff.Name }}</h3>
+          </p>
+          <p>ID#: {{ staff.ID }}</p>
+          <p>{{ staff.Bio|striptags}}</p>
+        </div>
+      </hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

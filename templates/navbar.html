@@ -1,0 +1,52 @@
+<div class="navbar navbar-inverse navbar-fixed-left headroom" >
+  <div class="container">
+    <div class="navbar-header">
+      <!-- Button for smallest screens -->
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      <a class="navbar-brand" href="https://developer.mindbodyonline.com"><img src="/static/assets/images/API-poweredby-download-color.png" alt="MINDBODY SOAP API Demo"></a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav pull-right">
+        <li><a href="/">Home</a></li>
+        <li><a href="/web/about">About</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Demos<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            {% if page == 'Class Service' %}
+              <li class="active"><a href="/web/services/class">Classes</a></li>
+            {% else %}
+              <li><a href="/web/services/class">Classes</a></li>
+            {% endif %}
+            {% if page == 'Client Service' %}
+              <li class="active"><a href="/web/services/client">Clients</a></li>
+            {% else %}
+              <li><a href="/web/services/client">Clients</a></li>
+            {% endif %}
+            {% if page == 'Appointment Service' %}
+              <li class="active"><a href="/web/services/appointment">Appointments</a></li>
+            {% else %}
+              <li><a href="/web/services/appointment">Appointments</a></li>
+            {% endif %}
+            {% if page == 'Site Service' %}
+              <li class="active"><a href="/web/services/site">Site</a></li>
+            {% else %}
+              <li><a href="/web/services/site">Site</a></li>
+            {% endif %}
+            {% if page == 'Staff Service' %}
+              <li class="active"><a href="/web/services/staff">Staff</a></li>
+            {% else %}
+              <li><a href="/web/services/staff">Staff</a></li>
+            {% endif %}
+          </ul>
+        </li>
+        <li><a href="/web/contact">Contact</a></li>
+        {% if request.session.userid != None %}
+          <li><a class="btn" href="/web/logout">SIGN OUT</a></li>
+        {% else %}
+          <li><a class="btn" href="/web/login">SIGN IN / SIGN UP</a></li>
+          
+        {% endif %}
+      </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>

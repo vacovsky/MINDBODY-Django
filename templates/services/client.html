@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h2>Client Profile of <strong>{{clientprofile.FirstName}} {{ clientprofile.LastName}}</strong></h2>
+  <p></p>
+  {% if request.session.userid != None %}
+    <p>Sex: {{ clientprofile.Gender }}</p>
+    <p>Username: {{ request.session.username }}</p>
+    <p>ID: {{ request.session.userid }}</p>
+    <p>Contact Email Opt-In: {{ clientprofile.EmailOptIn }}</p>
+    <p>Promotional Email Opt-In: {{ clientprofile.PromotionalEmailOptIn }}</p>
+    <p>Has Signed Liability Release: {{ clientprofile.LiabilityRelease }}</p>
+    <p>Appointment Gender Prference: {{ clientprofile.AppointmentGenderPreference }}</p>
+    <p>Birthdate: {{ clientprofile.BirthDate }}</p>
+    <p>Is Prospect: {{ clientprofile.IsProspect }}</p>
+    <p>First Visit Date: {{ clientprofile.FirstAppointmentDate }}</p>
+  {% else %}
+    <p>For demo purposes, this page requires you to create an account with the <a href="">sign-in / sign-up</a> button on the top right corner.  <p>The button uses the ClientService method <strong>AddOrUpdateClients</strong> to post a request to the MINDBODY API with the details of the account.  The account will be created, and you will be logged in instantly. The account only has a lifetime of 1 day, as it's hitting the public demo site.  Once logged in, this page demostrates how to access client profile information</p>
+  {% endif %}
+{% endblock %}

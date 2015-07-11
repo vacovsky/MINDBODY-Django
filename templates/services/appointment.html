@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <p>
+    <form name="staffAptts" id="staffAptts" method="POST">
+      {% csrf_token %}
+      <div class="input-append">
+        <input class="span2" id="staffid" name="staffid" type="hidden">
+        <div class="btn-group">
+          <button class="btn btn-action btn-lg" data-toggle="dropdown">
+          Select Staff to View Today's Appointments
+          <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            {% for staff in staffList %}
+              {% if staff.ID > 0 %}
+                {% ifnotequal staff.ID|stringformat:"s" staffid %}
+                  <li onclick="$('#staffid').val('{{staff.ID}}'); $('#staffAptts').submit()">{{ staff.Name }}</li>
+                {% else %}
+                  <li onclick="$('#staffid').val('{{staff.ID}}'); $('#staffAptts').submit()"><strong>{{ staff.Name }}</strong></li>
+                {% endifnotequal %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </form>
+  </p>
+  <classlist>
+  {% if message != None %}
+    {{ message }}
+  {% else %}
+    <img src="{{ appointment.Staff.ImageURL }}" alt="{{ appointment.Staff.Name }}">
+    <ul>
+      {% for appointment in scheduleItems %}
+        <hr>
+        <li>
+          <p>Program: {{ appointment.Program.Name }}</p>
+          <p>Appointment ID: {{ appointment.ID }}</p>
+          <p>Start: {{ appointment.StartDateTime }}</p>
+          <p>End: {{ appointment.EndDateTime }}</p>
+          <p>Location: {{ appointment.Location.SiteID }}</p>
+          <p>With Client: {{ appointment.Client.FirstName }} {{ appointment.Client.LastName }}</p>
+        </li>
+        </hr>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</p>
+</classlist>
+{% endblock %}

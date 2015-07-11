@@ -1,0 +1,1 @@
+web: gunicorn mboapi_djangodemo.wsgi --log-file -

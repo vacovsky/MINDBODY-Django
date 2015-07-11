@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h2> {{ page }} </h2>
+  <p>
+  <classlist>
+    <ul>
+      {% for class in classList %}
+        <hr>
+          <li>
+            <img src="{{ class.ClassDescription.ImageURL }}" alt="">
+            <h3>{{ class.ClassDescription.Name }}</h3>
+            <p>{{ class.ClassDescription.Description|striptags }}</p>
+            <p>Instructor: <string>{{ class.Staff.Name }}</string> <img src="{{ class.Staff.ImageURL }}" alt=""></p>
+            <p>Class begins: <string>{{ class.StartDateTime }}</string></p>
+            <p>Class ends: {{ class.EndDateTime }}</p>
+          </li>
+      </ul>
+    {% endfor %}
+  </classlist>
+  </p>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h2>Service Catalogue</h2>
+  {% for service in services %}
+    {% if service.ID > 0 %}
+      <hr>
+        <div class="staff">
+          <p>
+            <h3>{{ service.Name }}</h3>
+          </p>
+          <p>Time Length: {{ service.DefaultTimeLength }}</p>
+          <p>Program ID: {{ service.ID }}</p>
+        </div>
+      </hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

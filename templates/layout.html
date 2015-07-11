@@ -1,0 +1,34 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+    {% include 'head.html' %}
+    <body class="home">
+        <!-- NAVBAR -->
+        {% include 'navbar.html' %}
+        <!-- /.navbar -->
+        {% if page == 'Welcome' %}
+            <!-- Header -->
+            {% include 'header.html' %}
+            <!-- /Header -->
+            <!-- Intro -->
+            {% include 'intro.html' %}
+            <!-- /Intro-->
+        {% else %}
+            <!-- container -->
+            <div class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+            <!-- /container -->
+        {% endif %}
+        <!-- Social links. @TODO: replace by link/instructions in template -->
+        {% include 'social.html' %}
+        <!-- /social links -->
+        <!-- FOOTER -->
+        {% include 'footer.html' %}
+        <!-- /FOOTER -->
+        <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+        {% include 'javabase.html' %}
+        <!-- /java includes -->
+    </body>
+</html>

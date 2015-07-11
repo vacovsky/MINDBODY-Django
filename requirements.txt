@@ -1,0 +1,9 @@
+dj-database-url==0.3.0
+dj-static==0.0.6
+Django==1.8.2
+django-crispy-forms==1.4.0
+django-toolbelt==0.0.1
+gunicorn==19.3.0
+psycopg2==2.6.1
+static3==0.6.1
+suds-jurko==0.6
