@@ -1,5 +1,11 @@
 from suds.client import Client
-import BasicRequestHelper
+try:
+  from . import BasicRequestHelper
+  from .DebugPrinting import LogPlugin
+except:
+  import BasicRequestHelper
+  from DebugPrinting import LogPlugin
+
 from datetime import datetime
 
 class SaleServiceCalls():
@@ -178,7 +184,7 @@ class SaleServiceCalls():
 class SaleServiceMethods():
     """This class contains producer methods for all SaleService methods."""
     wsdl = BasicRequestHelper.BuildWsdlUrl("Sale")
-    service = Client(wsdl, location="https://api.mindbodyonline.com/0_5/SaleService.asmx")
+    service = Client(wsdl, location="https://api.mindbodyonline.com/0_5/SaleService.asmx")#, plugins=[LogPlugin()])
 
     def CreateBasicRequest(self, requestName):
         return BasicRequestHelper.CreateBasicRequest(self.service, requestName)
@@ -288,9 +294,9 @@ class SaleServiceMethods():
         return self.service.service.GetProducts(request)
 
     """GetSales methods"""
-    def GetSales(self, saleId, startSaleDateTime, endSaleDateTime, paymentMethodId):
+    def GetSales(self, saleId, startSaleDateTime, endSaleDateTime, paymentMethodId, pagesize=None):
         request = self.CreateBasicRequest("GetSales")
-
+        request.PageSize = pagesize
         request.SaleID = saleId
         request.StartSaleDateTime = startSaleDateTime
         request.EndSaleDateTime = endSaleDateTime

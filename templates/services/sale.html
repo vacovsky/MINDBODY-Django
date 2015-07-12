@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <h2>Sales Report</h2>
+  
+  <p>
+    <div style="width: 90%">
+      <p>Sales by Day Of Week</p>
+      <p><canvas id="line" height="300" width="600"></canvas></p>
+      <p>Incoming Money Last 30 Days</p>
+      <p><canvas id="canvas" height="300" width="600"></canvas></p>
+      <p>Incoming Money Last 30 Days (By Type)</p>
+      <p>
+        <canvas id="chart-area" width="300" height="300"></canvas>
+        <canvas id="chart2-area" width="300" height="300"></canvas>
+      </p>
+    </div>
+  </p>
+  <script>
+  var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+  var lineChartData = {
+labels : ["Monday", "Tuesday", "Wednesday", "Thursday", "Firday", "Saturday", "Sunday"],
+datasets : [
+{
+label: "Incoming Funds by Day of Week",
+fillColor : "#" + Math.random().toString(16).slice(2, 8),
+strokeColor : "#" + Math.random().toString(16).slice(2, 8),
+pointColor : "#" + Math.random().toString(16).slice(2, 8),
+pointStrokeColor : "#" + Math.random().toString(16).slice(2, 8),
+pointHighlightFill : "#" + Math.random().toString(16).slice(2, 8),
+pointHighlightStroke : "#" + Math.random().toString(16).slice(2, 8),
+data : [{% for dowsale in dowsalesreport %}{{ dowsale.1 }},{% endfor %}]
+},
+]
+}
+var barChartData = {labels : [{% for sale in salesreport %}"{{ sale.0 }}",{% endfor %}],
+datasets : [
+{
+fillColor : "#" + Math.random().toString(16).slice(2, 8),
+strokeColor : "#" + Math.random().toString(16).slice(2, 8),
+highlightFill : "#" + Math.random().toString(16).slice(2, 8),
+highlightStroke : "#" + Math.random().toString(16).slice(2, 8),
+data : [{% for sale in salesreport %}{{ sale.1 }},{% endfor %}]
+}
+]
+}
+var pieData = [
+{% for data in piereport %}
+{
+value: {{ data.1 }},
+color: "#" + Math.random().toString(16).slice(2, 8),
+highlight: "#" + Math.random().toString(16).slice(2, 8),
+label: "{{ data.0 }}"
+},
+{% endfor %}
+];
+window.onload = function(){
+var ctx = document.getElementById("canvas").getContext("2d");
+window.myBar = new Chart(ctx).Bar(barChartData, {
+responsive : true
+});
+var pie = document.getElementById("chart-area").getContext("2d");
+window.myPie = new Chart(pie).Pie(pieData);
+var pie2 = document.getElementById("chart2-area").getContext("2d");
+window.myPie = new Chart(pie2).Pie(pieData);
+var line = document.getElementById("line").getContext("2d");
+window.myLine = new Chart(line).Line(lineChartData, {
+responsive: true
+});
+}
+</script>
+{% endblock %}

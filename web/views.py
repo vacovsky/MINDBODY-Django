@@ -7,12 +7,14 @@ from .forms.contact_form import ContactForm
 from .forms.login_form import LoginForm, CreateLoginForm
 import smtplib
 
+from .servicecalls import salesreports
+
 from .servicecalls.staffservice_gets import GetStaff
 from .servicecalls.classservice_gets import GetClasses
 from .servicecalls.appointmentservice_gets import GetScheduleItems
 from .servicecalls.clientservice_inserts import AddNewClient
 from .servicecalls.siteservice_gets import GetSessionTypes
-
+from .servicecalls.saleservice_gets import GetSales
 from .session.login_manager import ConsumerCredentialManager
 
 from html.parser import HTMLParser
@@ -68,6 +70,20 @@ def contact(request):
 def about(request):
   context = { "page": "About" }
   return render(request, 'about.html', context)
+
+
+def sale_service(request):
+  context = { "page": "Site Service"}
+  sales = GetSales().Sales.Sale
+  report = salesreports.SalesReport(sales=sales).sale_totals_by_date()
+  piereport = salesreports.SalesReport(sales=sales).get_totals_by_payment_type()
+  dowsales = salesreports.SalesReport(sales=sales).get_totals_by_dow()
+  context['salesreport'] = report
+  context['piereport'] = piereport
+  context['dowsalesreport'] = dowsales
+  # need to build a dictionary to pass into context of template, which then gets consumed in charts.js
+  #context['salesdata'] = sales
+  return render(request, 'services/sale.html', context)
 
 
 def site_service(request):

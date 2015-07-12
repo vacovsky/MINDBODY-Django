@@ -1,17 +1,15 @@
 from suds.client import Client
 try:
   from . import BasicRequestHelper
+  from .DebugPrinting import LogPlugin
 except:
   import BasicRequestHelper
+  from DebugPrinting import LogPlugin
+
 from datetime import datetime
 from suds.plugin import MessagePlugin
 
 #for logging
-class LogPlugin(MessagePlugin):
-  def sending(self, context):
-    print(str(context.envelope))
-  def received(self, context):
-    print(str(context.reply))
 
 
 
