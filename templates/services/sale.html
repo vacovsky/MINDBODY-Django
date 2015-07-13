@@ -8,28 +8,25 @@
       <p><canvas id="line" height="300" width="600"></canvas></p>
       <p><h4>Sales: This Month / Last Month (by Hour)</h4></p>
       <p><canvas id="hour-chart" width="600" height="300"></canvas></p>
-      <p><h4>Sales: This Month (by Date)</h4></p>
+      <p><h4>Sales: 60 Day Histogram (by Date)</h4></p>
       <p><canvas id="canvas" height="300" width="600"></canvas></p>
-      <!--
-      <p><h4>Sales: This Month / Last Month (by Type)</h4></p>
+      <p><h4>Sales: This Month / Last Month (by Payment Type)</h4></p>
       <p><canvas id="paytype" width="600" height="300"></canvas></p>
       <p>
-        Last 30<canvas id="pie1" width="300" height="300"></canvas>
-        Previous 30<canvas id="pie2" width="300" height="300"></canvas>
+        Current Month<canvas id="pie1" width="300" height="300"></canvas>
+        Last Month<canvas id="pie2" width="300" height="300"></canvas>
       </p>
-      -->
     </div>
   </p>
   <script>
   function convertHex(hex, opacity){
-    hex = hex.replace('#','');
-    r = parseInt(hex.substring(0,2), 16);
-    g = parseInt(hex.substring(2,4), 16);
-    b = parseInt(hex.substring(4,6), 16);
-
-    result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
-    return result;
-}
+  hex = hex.replace('#','');
+  r = parseInt(hex.substring(0,2), 16);
+  g = parseInt(hex.substring(2,4), 16);
+  b = parseInt(hex.substring(4,6), 16);
+  result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
+  return result;
+  }
   //var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
   var lineChartData = {
   labels : ["Monday", "Tuesday", "Wednesday", "Thursday", "Firday", "Saturday", "Sunday"],
@@ -42,21 +39,20 @@
   pointStrokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
   pointHighlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
   pointHighlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
-  data : [{% for dowsale in lm_dowsalesreport %}{{ dowsale.1 }},{% endfor %}]
-  },
-  {
-  label: "Incoming Funds by Day of Week",
-  fillColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
-  strokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
-  pointColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
-  pointStrokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
-  pointHighlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
-  pointHighlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
-  data : [{% for dowsale in dowsalesreport %}{{ dowsale.1 }},{% endfor %}]
-  },
+data : [{% for dowsale in lm_dowsalesreport %}{{ dowsale.1 }},{% endfor %}]
+},
+{
+label: "Incoming Funds by Day of Week",
+fillColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+strokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+pointColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+pointStrokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+pointHighlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+pointHighlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+data : [{% for dowsale in dowsalesreport %}{{ dowsale.1 }},{% endfor %}]
+},
 ]
 }
-
 var hourlineData = {
 labels : [{% for sale in hoursalesreport %}"{{ sale.0 }}",{% endfor %}],
 datasets : [
@@ -131,7 +127,6 @@ label: "{{ data.0 }}"
 },
 {% endfor %}
 ];
-
 window.onload = function(){
 var line = document.getElementById("line").getContext("2d");
 window.myLine = new Chart(line).Line(lineChartData, {
@@ -149,17 +144,14 @@ var ptbc = document.getElementById("paytype").getContext("2d");
 window.myBar = new Chart(ptbc).Bar(paymentTypeData, {
 responsive : true
 });
-
-/*var pie = document.getElementById("pie1").getContext("2d");
+var pie = document.getElementById("pie1").getContext("2d");
 window.myPie = new Chart(pie).Pie(pieData);
 var pie2 = document.getElementById("pie2").getContext("2d");
-
 window.myPie = new Chart(pie2).Pie(pieData2);
 var line = document.getElementById("line").getContext("2d");
 window.myLine = new Chart(line).Line(lineChartData, {
 responsive: true
 });
-*/
 }
 </script>
 {% endblock %}

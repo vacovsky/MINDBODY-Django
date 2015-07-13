@@ -22,9 +22,6 @@ class SalesReport:
     else:
       self.SudsResult = GetSales(timedelta=2).Sales.Sale
 
-
-
-
   def print_sales(self):
     for sale in self.SudsResult:
       print(sale)
@@ -34,10 +31,8 @@ class SalesReport:
     if not self.current:
       name += '_nc'
     sales = {}
-
     try:
       sorted_by_dow = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
-      print(sorted_by_dow)
       return eval(sorted_by_dow.data_string)
 
     except ReportsCacheModel.DoesNotExist:
@@ -64,7 +59,6 @@ class SalesReport:
 
       return sorted_by_dow
 
-  
   def sale_totals_by_date(self):
     name = 'total_date'
     if not self.current:
@@ -98,7 +92,6 @@ class SalesReport:
       report.save()
 
       return sorted_by_date
-
 
   def get_totals_by_hour(self, comparison=0):
     name = 'total_hour'
@@ -138,16 +131,16 @@ class SalesReport:
 
       return sale_by_hour
 
-
   def get_totals_by_payment_type(self, comparison=0):
     name = 'total_paymenttype'
     if not self.current:
       name += '_nc'
     sales = {}
+    sale_list = ''
 
     try:
       sorted_by_payment_type = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
-      return eval(sorted_by_payment_type.data_string)
+      return ast.literal_eval(sorted_by_payment_type.data_string)
 
     except ReportsCacheModel.DoesNotExist:
       if self.SudsResult == None:
@@ -165,11 +158,36 @@ class SalesReport:
         else:
           sales[paytype] += sale_total
       sale_totals_by_payment_type = sales
-      sorted_by_payment_type = sorted(sale_totals_by_payment_type.items(), key=operator.itemgetter(0))
+      sorted_by_payment_type = sorted(sale_totals_by_payment_type.items(), key=operator.itemgetter(1))
 
       report = ReportsCacheModel()
       report.chart_name = name
       report.data_string = '\"' + str(sale_totals_by_payment_type) + '\"'
       report.save()
 
-      return sorted_by_payment_type
+      return sale_totals_by_payment_type.items
+
+
+def report_normalizer(report1, report2):
+  print(report1)
+  print(eval(report1))
+  print(type(eval(report1)))
+
+  """
+  for i in report1:
+    exists = False
+    for k in report2:
+      if i[0] == k[0]:
+        exists = True
+    if not exists:
+      report2.insert(report1.index(i), (i[0], 0))
+
+  for i in report2:
+    exists = False
+    for k in report1:
+      if i[0] == k[0]:
+        exists = True
+    if not exists:
+      report1.insert(report2.index(i), (i[0], 0))
+  """
+  return eval(report1).items, eval(report2).items
