@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from .forms.contact_form import ContactForm
 from .forms.login_form import LoginForm, CreateLoginForm
 import smtplib
+from .models import *
 
 from .servicecalls import salesreports
 
@@ -41,6 +42,7 @@ def contact(request):
     if form.is_valid():
       target_addresses = ['vacovsky@gmail.com']
 
+      #below used to ensure both now and previous months have similar data to compare
       """
       try:
         if form.cleaned_data['cc_myself']:
@@ -74,15 +76,47 @@ def about(request):
 
 def sale_service(request):
   context = { "page": "Site Service"}
-  sales = GetSales().Sales.Sale
-  report = salesreports.SalesReport(sales=sales).sale_totals_by_date()
-  piereport = salesreports.SalesReport(sales=sales).get_totals_by_payment_type()
-  dowsales = salesreports.SalesReport(sales=sales).get_totals_by_dow()
+  current_reports = salesreports.SalesReport()
+  old_reports = salesreports.SalesReport(current=False)
+
+  report = current_reports.sale_totals_by_date()
+  #piereport = salesreports.SalesReport().get_totals_by_payment_type()
+  dowsales = current_reports.get_totals_by_dow()
+  hoursales = current_reports.get_totals_by_hour()
+
+  lm_report = old_reports.sale_totals_by_date()
+  #lm_piereport = old_reports.get_totals_by_payment_type()
+  lm_dowsales = old_reports.get_totals_by_dow()
+  lm_hoursales = old_reports.get_totals_by_hour()
+  """
+  for i in piereport:
+    exists = False
+    for k in lm_piereport:
+      if i[0] == k[0]:
+        exists = True
+    print(exists)
+    if not exists:
+      lm_piereport.insert(piereport.index(i), (i[0], 0))
+
+  for i in lm_piereport:
+    exists = False
+    for k in piereport:
+      if i[0] == k[0]:
+        exists = True
+    print(exists)
+    if not exists:
+      piereport.insert(lm_piereport.index(i), (i[0], 0))
+  """
   context['salesreport'] = report
-  context['piereport'] = piereport
+  #context['piereport'] = piereport
   context['dowsalesreport'] = dowsales
-  # need to build a dictionary to pass into context of template, which then gets consumed in charts.js
-  #context['salesdata'] = sales
+  context['hoursalesreport'] = hoursales
+
+  context['lm_salesreport'] = lm_report
+  #context['lm_piereport'] = lm_piereport
+  context['lm_dowsalesreport'] = lm_dowsales
+  context['lm_hoursalesreport'] = lm_hoursales
+
   return render(request, 'services/sale.html', context)
 
 
