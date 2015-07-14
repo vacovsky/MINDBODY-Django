@@ -14,5 +14,5 @@ def AddNewClient(username, password, firstname="Not", lastname="Provided", birth
   client.Action = None
   clients = FillArrayType(service.service, [client], "Client", "Client")
   result = ClientServiceMethods().AddOrUpdateClients('AddNew', False, clients)
-
   return result
+

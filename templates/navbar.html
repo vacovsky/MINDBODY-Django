@@ -22,15 +22,20 @@
             {% else %}
               <li><a href="/web/services/class">Classes</a></li>
             {% endif %}
-            {% if page == 'Client Service' %}
-              <li class="active"><a href="/web/services/client">Clients</a></li>
+            {% if page == 'My Profile' %}
+              <li class="active"><a href="/web/services/client">My Profile</a></li>
             {% else %}
-              <li><a href="/web/services/client">Clients</a></li>
+              <li><a href="/web/services/client">My Profile</a></li>
             {% endif %}
-            {% if page == 'Sale Service' %}
-              <li class="active"><a href="/web/services/sale">Sale</a></li>
+            {% if page == 'Clients Report' %}
+              <li class="active"><a href="/web/services/clientsreport">Clients Report</a></li>
             {% else %}
-              <li><a href="/web/services/sale">Sale</a></li>
+              <li><a href="/web/services/clientsreport">Clients Report</a></li>
+            {% endif %}
+            {% if page == 'Sales Report' %}
+              <li class="active"><a href="/web/services/sale">Sales Report</a></li>
+            {% else %}
+              <li><a href="/web/services/sale">Sales Report</a></li>
             {% endif %}
             {% if page == 'Site Service' %}
               <li class="active"><a href="/web/services/site">Site</a></li>

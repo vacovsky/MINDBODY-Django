@@ -169,11 +169,9 @@ class SalesReport:
 
 
 def report_normalizer(report1, report2):
-  print(report1)
-  print(eval(report1))
-  print(type(eval(report1)))
+  report1 = sorted(eval(report1).items(), key=operator.itemgetter(1))
+  report2 = sorted(eval(report2).items(), key=operator.itemgetter(1))
 
-  """
   for i in report1:
     exists = False
     for k in report2:
@@ -189,5 +187,5 @@ def report_normalizer(report1, report2):
         exists = True
     if not exists:
       report1.insert(report2.index(i), (i[0], 0))
-  """
-  return eval(report1).items, eval(report2).items
+  
+  return report1, report2

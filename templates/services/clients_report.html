@@ -1,0 +1,90 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Clients Report</h2>
+{% if not spinnner %}
+<p>
+  <div style="width: 90%">
+    <p><h4>Clients: All Clients by Age</h4></p>
+    <p><canvas id="line" height="300" width="600"></canvas></p>
+    <p><h4>Clients: All Clients by Sex</h4></p>
+    <p><canvas id="cbs" height="300" width="600"></canvas></p>
+    <p><h4>Clients: All Clients by Gender Preference</h4></p>
+    <p><canvas id="cgp" height="300" width="600"></canvas></p>
+  </div>
+</p>
+
+
+<script>
+  function convertHex(hex, opacity){
+  hex = hex.replace('#','');
+  r = parseInt(hex.substring(0,2), 16);
+  g = parseInt(hex.substring(2,4), 16);
+  b = parseInt(hex.substring(4,6), 16);
+  result = 'rgba('+r+','+g+','+b+','+opacity/100+')';
+  return result;
+  }
+  //var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+  var lineChartData = {
+  labels : ["-20", "21-25", "26-30", "31-35", "36-40", "41-45", "46-50", "51-55", "56-60", "61-65", , "66+"],
+  datasets : [
+  {
+  label: "Incoming Funds by Day of Week",
+  fillColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  strokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointStrokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointHighlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointHighlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+data : [{% for age in clientage %}{{ age.1 }},{% endfor %}]
+}
+]
+}
+
+
+var clients_by_sex = {labels : [{% for client in clientsex %}"{{ client.0 }}",{% endfor %}],
+datasets : [
+{
+fillColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+strokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+highlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+highlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+data : [{% for client in clientsex %}{{ client.1 }},{% endfor %}]
+}
+]
+}
+
+
+var clients_by_gp = {labels : [{% for client in clientgp %}"{{ client.0 }}",{% endfor %}],
+datasets : [
+{
+fillColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+strokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+highlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+highlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+data : [{% for client in clientgp %}{{ client.1 }},{% endfor %}]
+}
+]
+}
+
+window.onload = function(){
+var line = document.getElementById("line").getContext("2d");
+window.myLine = new Chart(line).Line(lineChartData, {
+responsive: true
+});
+
+var cbs = document.getElementById("cbs").getContext("2d");
+window.myBar = new Chart(cbs).Bar(clients_by_sex, {
+responsive : true
+});
+
+var cgp = document.getElementById("cgp").getContext("2d");
+window.myBar = new Chart(cgp).Bar(clients_by_gp, {
+responsive : true
+});
+}
+</script>
+
+{% else %}
+  <p><center><img src="/static/assets/img/wait2.gif"><img src="/static/assets/img/waiting.gif"></center></p>
+{% endif %}
+{% endblock %}
