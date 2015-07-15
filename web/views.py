@@ -18,8 +18,8 @@ from .servicecalls.saleservice_gets import GetSales
 from .session.login_manager import ConsumerCredentialManager
 from html.parser import HTMLParser
 from .decorators.auth_session import mbo_authed
+from .decorators.thread_postpone import postpone
 import datetime
-
 from threading import Thread
 
 def landing(request):
@@ -73,6 +73,22 @@ def sale_service(request):
   context = { "page": "Sales Report"}
   current_reports = salesreports.SalesReport()
   old_reports = salesreports.SalesReport(current=False)
+
+  #turn this into a method - seems useful
+  datacharts = ['total_dow', 'total_date', 'total_hour', 'total_paymenttype', 
+                'total_dow_nc', 'total_date_nc', 'total_hour_nc', 'total_paymenttype_nc' ]
+
+  try:
+    for i in datacharts:
+      ReportsCacheModel.objects.filter(datapull_datestamp=datetime.datetime.today(), chart_name=i)[0]
+      
+  except:
+    print('kicking off async soap call for sales report')
+    context['spinner'] = True
+    context['seconds'] = 90
+    sales_report_helper()
+    return render(request, 'please_wait.html', context)
+
   report = current_reports.sale_totals_by_date()
   piereport = current_reports.get_totals_by_payment_type()
   dowsales = current_reports.get_totals_by_dow()
@@ -81,6 +97,7 @@ def sale_service(request):
   lm_piereport = old_reports.get_totals_by_payment_type()
   lm_dowsales = old_reports.get_totals_by_dow()
   lm_hoursales = old_reports.get_totals_by_hour()
+
   try:
     piereport, lm_piereport = salesreports.report_normalizer(piereport, lm_piereport)
   except:
@@ -94,7 +111,24 @@ def sale_service(request):
   context['lm_piereport'] = lm_piereport
   context['lm_dowsalesreport'] = lm_dowsales
   context['lm_hoursalesreport'] = lm_hoursales
-  return render(request, 'services/sale.html', context)
+  return render(request, 'services/sales_report.html', context)
+
+
+@postpone
+def sales_report_helper():
+  current_reports = salesreports.SalesReport()
+  old_reports = salesreports.SalesReport(current=False)
+  current_reports.sale_totals_by_date()
+  current_reports.get_totals_by_payment_type()
+  current_reports.get_totals_by_dow()
+  current_reports.get_totals_by_hour()
+  old_reports.sale_totals_by_date()
+  old_reports.get_totals_by_payment_type()
+  old_reports.get_totals_by_dow()
+  old_reports.get_totals_by_hour()
+
+
+
 
 
 def site_service(request):
@@ -119,22 +153,27 @@ def clients_report(request):
   #Experimentation with threading these calls
   try:
     for i in datacharts:
-      ReportsCacheModel.objects.get(datapull_datestamp=datetime.datetime.today(), chart_name=i)
-      
+      ReportsCacheModel.objects.filter(datapull_datestamp=datetime.datetime.today(), chart_name=i)[0]
   except:
-    t1 = Thread(target=clientsreport.all_clients_by_age(), args=( ))
-    t2 = Thread(target=clientsreport.client_sex(), args=( ))
-    t3 = Thread(target=clientsreport.client_gender_pref(), args=())
-    t1.start()
-    t2.start()
-    t3.start()
+    print('kicking off async soap call for clients report')
     context['spinner'] = True
-    return render(request, 'services/clients_report.html', context)
+    context['seconds'] = 90
+    clients_report_helper()
+    return render(request, 'please_wait.html', context)
 
   context['clientage'] = clientsreport.all_clients_by_age()
   context['clientsex'] = clientsreport.client_sex()
   context['clientgp'] = clientsreport.client_gender_pref()
   return render(request, 'services/clients_report.html', context)
+
+
+@postpone
+def clients_report_helper():
+  clientsreport = clientsreports.ClientsReport()
+  clientsreport.all_clients_by_age()
+  clientsreport.client_sex()
+  clientsreport.client_gender_pref()
+
 
 
 def appointment_service(request):

@@ -12,3 +12,13 @@ class ReportsCacheModel(models.Model):
 
   def __str__(self):
     return "Cached Chart Data by Day"
+
+"""
+class ReportsWaitingModel(models.Model):
+  id = models.AutoField(foreign_key=ReportsCacheModel)
+  chart_name = models.CharField(max_length=50)
+  in_progress = models.BooleanField(default=False)
+
+  def __str__(self):
+    return "Table with job statuses"
+"""

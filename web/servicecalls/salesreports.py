@@ -32,10 +32,10 @@ class SalesReport:
       name += '_nc'
     sales = {}
     try:
-      sorted_by_dow = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
+      sorted_by_dow = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
       return eval(sorted_by_dow.data_string)
 
-    except ReportsCacheModel.DoesNotExist:
+    except (IndexError, ReportsCacheModel.DoesNotExist):
       if self.SudsResult == None:
         self.GetSudsResults()
 
@@ -59,6 +59,7 @@ class SalesReport:
 
       return sorted_by_dow
 
+
   def sale_totals_by_date(self):
     name = 'total_date'
     if not self.current:
@@ -66,10 +67,10 @@ class SalesReport:
     sales = {}
 
     try:
-      sorted_by_payment_type = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
+      sorted_by_payment_type = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
       return eval(sorted_by_payment_type.data_string)
 
-    except ReportsCacheModel.DoesNotExist:
+    except (IndexError, ReportsCacheModel.DoesNotExist):
       if self.SudsResult == None:
         self.GetSudsResults()
 
@@ -100,10 +101,10 @@ class SalesReport:
     sales = {}
 
     try:
-      sale_by_hour = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
+      sale_by_hour = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
       return eval(sale_by_hour.data_string)
 
-    except ReportsCacheModel.DoesNotExist:
+    except (IndexError, ReportsCacheModel.DoesNotExist):
       if self.SudsResult == None:
         self.GetSudsResults()
 
@@ -139,10 +140,10 @@ class SalesReport:
     sale_list = ''
 
     try:
-      sorted_by_payment_type = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
+      sorted_by_payment_type = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
       return ast.literal_eval(sorted_by_payment_type.data_string)
 
-    except ReportsCacheModel.DoesNotExist:
+    except (IndexError, ReportsCacheModel.DoesNotExist):
       if self.SudsResult == None:
         self.GetSudsResults()
 

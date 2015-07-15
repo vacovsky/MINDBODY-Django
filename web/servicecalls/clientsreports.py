@@ -5,6 +5,8 @@ import ast
 from .clientservice_gets import GetAllClients
 from dateutil.relativedelta import relativedelta
 
+from ..decorators.thread_postpone import postpone
+
 
 class ClientsReport:
   clients_by_age_group = None
@@ -40,10 +42,10 @@ class ClientsReport:
       name += '_nc'
     ages = {}
     try:
-      clients_by_age = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
+      clients_by_age = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
       return eval(clients_by_age.data_string)
 
-    except ReportsCacheModel.DoesNotExist:
+    except (IndexError, ReportsCacheModel.DoesNotExist):
       if self.SudsResult == None:
         self.GetSudsResults()
 
@@ -132,16 +134,17 @@ class ClientsReport:
       return ages_by_group
 
 
+
   def client_sex(self):
       name = 'clients_by_sex'
       if not self.current:
         name += '_nc'
       sexes = {}
       try:
-        all_clients_by_sex = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
+        all_clients_by_sex = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
         return eval(all_clients_by_sex.data_string)
 
-      except ReportsCacheModel.DoesNotExist:
+      except (IndexError, ReportsCacheModel.DoesNotExist):
         if self.SudsResult == None:
           self.GetSudsResults()
           
@@ -186,10 +189,10 @@ class ClientsReport:
         name += '_nc'
       sexes = {}
       try:
-        all_clients_by_gp = ReportsCacheModel.objects.get(datapull_datestamp=self.TodayDate, chart_name=name)
+        all_clients_by_gp = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
         return eval(all_clients_by_gp.data_string)
 
-      except ReportsCacheModel.DoesNotExist:
+      except (IndexError, ReportsCacheModel.DoesNotExist):
         if self.SudsResult == None:
           self.GetSudsResults()
         for thing in self.SudsResult:

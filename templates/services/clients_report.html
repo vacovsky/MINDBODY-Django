@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 <h2>Clients Report</h2>
-{% if not spinnner %}
+
 <p>
   <div style="width: 90%">
     <p><h4>Clients: All Clients by Age</h4></p>
@@ -84,7 +84,4 @@ responsive : true
 }
 </script>
 
-{% else %}
-  <p><center><img src="/static/assets/img/wait2.gif"><img src="/static/assets/img/waiting.gif"></center></p>
-{% endif %}
 {% endblock %}
