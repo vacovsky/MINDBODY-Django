@@ -22,11 +22,13 @@
             {% else %}
               <li><a href="/web/services/class">Classes</a></li>
             {% endif %}
-            {% if page == 'My Profile' %}
-              <li class="active"><a href="/web/services/client">My Profile</a></li>
-            {% else %}
-              <li><a href="/web/services/client">My Profile</a></li>
-            {% endif %}
+            {% if request.session.userid != None %}
+              {% if page == 'My Profile' %}
+                <li class="active"><a href="/web/services/client">My Profile</a></li>
+              {% else %}
+                <li><a href="/web/services/client">My Profile</a></li>
+                {% endif %}
+              {% endif %}
             {% if page == 'Clients Report' %}
               <li class="active"><a href="/web/services/clientsreport">Clients Report</a></li>
             {% else %}

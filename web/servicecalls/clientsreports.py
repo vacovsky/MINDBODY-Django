@@ -13,10 +13,12 @@ class ClientsReport:
   all_clients_by_sex = None
   all_clients_by_gp = None
 
+
   def __init__(self, clients=None, current=True):
     self.SudsResult = clients
     self.current = current
     self.TodayDate = datetime.datetime.today()
+
 
   def GetSudsResults(self):
     index = 1
@@ -134,7 +136,6 @@ class ClientsReport:
       return ages_by_group
 
 
-
   def client_sex(self):
       name = 'clients_by_sex'
       if not self.current:
@@ -147,7 +148,7 @@ class ClientsReport:
       except (IndexError, ReportsCacheModel.DoesNotExist):
         if self.SudsResult == None:
           self.GetSudsResults()
-          
+
         for thing in self.SudsResult:
           for client in thing:
             if hasattr(client, 'Gender') and client.Gender != None:
@@ -228,3 +229,128 @@ class ClientsReport:
         report.save()
 
         return all_clients_by_gp
+
+
+  def first_appointment_doy(self):
+      name = 'first_appt_doy'
+      if not self.current:
+        name += '_nc'
+      date_hits = {}
+      try:
+        first_appt_doy = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
+        return eval(first_appt_doy.data_string)
+
+      except (IndexError, ReportsCacheModel.DoesNotExist):
+        if self.SudsResult == None:
+          self.GetSudsResults()
+
+        for thing in self.SudsResult:
+          for client in thing:
+            firstappt = None
+            if client.FirstAppointmentDate != None:
+              #firstappt = str('%02d' % client.FirstAppointmentDate.month) + '-' + str(client.FirstAppointmentDate.day)
+
+              #firstappt = next_weekday(client.FirstAppointmentDate, 0)
+              firstappt = 'Week ' + str('%02d' % client.FirstAppointmentDate.isocalendar()[1])
+
+              if firstappt not in date_hits:
+                date_hits[firstappt] = 1
+              else:
+                date_hits[firstappt] += 1
+
+        first_appointment_doy = date_hits
+        first_appt_doy = sorted(first_appointment_doy.items(), key=operator.itemgetter(0))
+
+        report = ReportsCacheModel()
+        report.chart_name = name
+        report.data_string = str(first_appt_doy)
+        report.save()
+
+        return first_appt_doy
+
+  """
+
+
+  def first_appointment_hour(self):
+        name = 'first_appt_hour'
+        if not self.current:
+          name += '_nc'
+        date_hits = {}
+        try:
+          first_appt_hour = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
+          return eval(first_appt_hour.data_string)
+
+        except (IndexError, ReportsCacheModel.DoesNotExist):
+          if self.SudsResult == None:
+            self.GetSudsResults()
+
+          for thing in self.SudsResult:
+            for client in thing:
+              firstappt = None
+              if client.FirstAppointmentDate != None:
+                #firstappt = str('%02d' % client.FirstAppointmentDate.month) + '-' + str(client.FirstAppointmentDate.day)
+
+                #firstappt = next_weekday(client.FirstAppointmentDate, 0)
+                firstappt = str(client.FirstAppointmentDate.hour)
+                if len(firstappt) == 1:
+                  firstappt = '0' + str(firstappt)
+
+                if firstappt not in date_hits:
+                  date_hits[firstappt] = 1
+                else:
+                  date_hits[firstappt] += 1
+
+          first_appointment_hour = date_hits
+          first_appt_hour = sorted(first_appointment_hour.items(), key=operator.itemgetter(0))
+
+          report = ReportsCacheModel()
+          report.chart_name = name
+          report.data_string = str(first_appt_hour)
+          report.save()
+
+          return first_appt_hour
+  """
+
+
+  def first_appointment_weekday(self):
+        name = 'first_appt_weekday'
+        if not self.current:
+          name += '_nc'
+        date_hits = {}
+        try:
+          first_appt_weekday = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
+          return eval(first_appt_weekday.data_string)
+
+        except (IndexError, ReportsCacheModel.DoesNotExist):
+          if self.SudsResult == None:
+            self.GetSudsResults()
+
+          for thing in self.SudsResult:
+            for client in thing:
+              firstappt = None
+              if client.FirstAppointmentDate != None:
+                #firstappt = str('%02d' % client.FirstAppointmentDate.month) + '-' + str(client.FirstAppointmentDate.day)
+                #firstappt = next_weekday(client.FirstAppointmentDate, 0)
+                firstappt = client.FirstAppointmentDate.weekday()
+
+                if firstappt not in date_hits:
+                  date_hits[firstappt] = 1
+                else:
+                  date_hits[firstappt] += 1
+
+          first_appointment_weekday = date_hits
+          first_appt_weekday = sorted(first_appointment_weekday.items(), key=operator.itemgetter(0))
+
+          report = ReportsCacheModel()
+          report.chart_name = name
+          report.data_string = str(first_appt_weekday)
+          report.save()
+
+          return first_appt_weekday
+
+
+def next_weekday(d, weekday):
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0: # Target day already happened this week
+        days_ahead += 7
+    return d + datetime.timedelta(days_ahead)

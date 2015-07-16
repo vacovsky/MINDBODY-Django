@@ -21,5 +21,5 @@ urlpatterns = [
     url(r'^join$', views.create_account),
     url(r'^profile$', views.profile),
 
-    
-]
+
+]#

@@ -6,6 +6,10 @@
   <div style="width: 90%">
     <p><h4>Clients: All Clients by Age</h4></p>
     <p><canvas id="line" height="300" width="600"></canvas></p>
+    <p><h4>Clients: First Appointment Date</h4></p>
+    <p><canvas id="first_appt_doy" height="300" width="600"></canvas></p>
+    <p><h4>Clients: First Appointment Day of Week</h4></p>
+    <p><canvas id="first_appt_weekday" height="300" width="600"></canvas></p>
     <p><h4>Clients: All Clients by Sex</h4></p>
     <p><canvas id="cbs" height="300" width="600"></canvas></p>
     <p><h4>Clients: All Clients by Gender Preference</h4></p>
@@ -41,6 +45,56 @@ data : [{% for age in clientage %}{{ age.1 }},{% endfor %}]
 }
 
 
+var first_apptdoy_data = {
+  labels : [{% for doydate in first_appt_doy %}"{{ doydate.0 }}",{% endfor %}],
+  datasets : [
+  {
+  label: "Number of First Appointments by ISO Week",
+  fillColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  strokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointStrokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointHighlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointHighlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+data : [{% for doydate in first_appt_doy %}"{{ doydate.1 }}",{% endfor %}]
+}
+]
+}
+/*
+var first_appt_hour_data = {
+  labels : [{% for hour in first_appt_hour %}"{{ hour.0 }}",{% endfor %}],
+  datasets : [
+  {
+  label: "Number of First Appointments by ISO Week",
+  fillColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  strokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointStrokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointHighlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointHighlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+data : [{% for hour in first_appt_hour %}"{{ hour.1 }}",{% endfor %}]
+}
+]
+}
+*/
+
+var first_apptweekday_data = {
+  labels : ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+  datasets : [
+  {
+  label: "Incoming Funds by Day of Week",
+  fillColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  strokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointStrokeColor : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointHighlightFill : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+  pointHighlightStroke : convertHex("#" + Math.random().toString(16).slice(2, 8),25),
+data : [{% for weekday in first_appt_weekday %}"{{ weekday.1 }}",{% endfor %}]
+}
+]
+}
+
+
 var clients_by_sex = {labels : [{% for client in clientsex %}"{{ client.0 }}",{% endfor %}],
 datasets : [
 {
@@ -71,6 +125,23 @@ var line = document.getElementById("line").getContext("2d");
 window.myLine = new Chart(line).Line(lineChartData, {
 responsive: true
 });
+
+var first_appt_doy = document.getElementById("first_appt_doy").getContext("2d");
+window.myLine = new Chart(first_appt_doy).Line(first_apptdoy_data, {
+responsive: true
+});
+
+var first_appt_weekday = document.getElementById("first_appt_weekday").getContext("2d");
+window.myLine = new Chart(first_appt_weekday).Line(first_apptweekday_data, {
+responsive: true
+});
+
+/*
+var first_appt_hour = document.getElementById("first_appt_hour").getContext("2d");
+window.myLine = new Chart(first_appt_hour).Line(first_appt_hour_data, {
+responsive: true
+});
+*/
 
 var cbs = document.getElementById("cbs").getContext("2d");
 window.myBar = new Chart(cbs).Bar(clients_by_sex, {
