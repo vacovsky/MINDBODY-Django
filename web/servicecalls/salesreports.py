@@ -4,189 +4,189 @@ from ..models import ReportsCacheModel
 import ast
 from ..servicecalls.saleservice_gets import GetSales
 
+
 class SalesReport:
-  sale_totals_by_date = None
-  sale_totals_by_payment_type = None
-  sale_totals_by_dow = None
-  sale_totals_by_hour = None
 
-  def __init__(self, sales=None, current=True):
-    self.SudsResult = sales
-    self.SaleTotalsByDate = None
-    self.current = current
-    self.TodayDate = datetime.datetime.today()
+    def __init__(self, sales=None, current=True):
+        self.SudsResult = sales
+        self.SaleTotalsByDate = None
+        self.current = current
+        self.TodayDate = datetime.datetime.today()
 
-  def GetSudsResults(self):
-    if not self.current:
-      self.SudsResult = GetSales(timedelta=1).Sales.Sale
-    else:
-      self.SudsResult = GetSales(timedelta=2).Sales.Sale
-
-  def print_sales(self):
-    for sale in self.SudsResult:
-      print(sale)
-
-  def get_totals_by_dow(self, comparison=0):
-    name = 'total_dow'
-    if not self.current:
-      name += '_nc'
-    sales = {}
-    try:
-      sorted_by_dow = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
-      return eval(sorted_by_dow.data_string)
-
-    except (IndexError, ReportsCacheModel.DoesNotExist):
-      if self.SudsResult == None:
-        self.GetSudsResults()
-
-      for sale in self.SudsResult:
-        sale_total = 0.0
-        payments = sale.Payments
-        saleday = str(sale.SaleDate.weekday())
-        for payment in payments:
-          sale_total += payment[1][0].Amount
-        if saleday not in sales:
-          sales[saleday] = sale_total
+    def GetSudsResults(self):
+        if not self.current:
+            self.SudsResult = GetSales(timedelta=1).Sales.Sale
         else:
-          sales[saleday] += sale_total
-      sale_totals_by_dow = sales
-      sorted_by_dow = sorted(sale_totals_by_dow.items(), key=operator.itemgetter(0))
+            self.SudsResult = GetSales(timedelta=2).Sales.Sale
 
-      report = ReportsCacheModel()
-      report.chart_name = name
-      report.data_string = str(sorted_by_dow)
-      report.save()
+    def print_sales(self):
+        for sale in self.SudsResult:
+            print(sale)
 
-      return sorted_by_dow
+    def get_totals_by_dow(self):
+        name = 'total_dow'
+        if not self.current:
+            name += '_nc'
+        sales = {}
+        try:
+            sorted_by_dow = ReportsCacheModel.objects.filter(
+                datapull_datestamp=self.TodayDate, chart_name=name)[0]
+            return eval(sorted_by_dow.data_string)
 
+        except (IndexError, ReportsCacheModel.DoesNotExist):
+            if self.SudsResult == None:
+                self.GetSudsResults()
 
-  def sale_totals_by_date(self):
-    name = 'total_date'
-    if not self.current:
-      name += '_nc'
-    sales = {}
+            for sale in self.SudsResult:
+                sale_total = 0.0
+                payments = sale.Payments
+                saleday = str(sale.SaleDate.weekday())
+                for payment in payments:
+                    sale_total += payment[1][0].Amount
+                if saleday not in sales:
+                    sales[saleday] = sale_total
+                else:
+                    sales[saleday] += sale_total
+            sale_totals_by_dow = sales
+            sorted_by_dow = sorted(sale_totals_by_dow.items(), key=operator.itemgetter(0))
 
-    try:
-      sorted_by_payment_type = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
-      return eval(sorted_by_payment_type.data_string)
+            report = ReportsCacheModel()
+            report.chart_name = name
+            report.data_string = str(sorted_by_dow)
+            report.save()
 
-    except (IndexError, ReportsCacheModel.DoesNotExist):
-      if self.SudsResult == None:
-        self.GetSudsResults()
+            return sorted_by_dow
 
-      for sale in self.SudsResult:
-        sale_total = 0.0
-        payments = sale.Payments
-        saledate = str(sale.SaleDate).split(' ')[0]
-        for payment in payments:
-          sale_total += payment[1][0].Amount
-        if saledate not in sales:
-          sales[saledate] = sale_total
-        else:
-          sales[saledate] += sale_total
-      sale_totals_by_date = sales
-      sorted_by_date = sorted(sale_totals_by_date.items(), key=operator.itemgetter(0))
+    def sale_totals_by_date(self):
+        name = 'total_date'
+        if not self.current:
+            name += '_nc'
+        sales = {}
 
-      report = ReportsCacheModel()
-      report.chart_name = name
-      report.data_string = str(sorted_by_date)
-      report.save()
+        try:
+            sorted_by_payment_type = ReportsCacheModel.objects.filter(
+                datapull_datestamp=self.TodayDate, chart_name=name)[0]
+            return eval(sorted_by_payment_type.data_string)
 
-      return sorted_by_date
+        except (IndexError, ReportsCacheModel.DoesNotExist):
+            if self.SudsResult == None:
+                self.GetSudsResults()
 
-  def get_totals_by_hour(self, comparison=0):
-    name = 'total_hour'
-    if not self.current:
-      name += '_nc'
-    sales = {}
+            for sale in self.SudsResult:
+                sale_total = 0.0
+                payments = sale.Payments
+                saledate = str(sale.SaleDate).split(' ')[0]
+                for payment in payments:
+                    sale_total += payment[1][0].Amount
+                if saledate not in sales:
+                    sales[saledate] = sale_total
+                else:
+                    sales[saledate] += sale_total
+            sale_totals_by_date = sales
+            sorted_by_date = sorted(sale_totals_by_date.items(), key=operator.itemgetter(0))
 
-    try:
-      sale_by_hour = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
-      return eval(sale_by_hour.data_string)
+            report = ReportsCacheModel()
+            report.chart_name = name
+            report.data_string = str(sorted_by_date)
+            report.save()
 
-    except (IndexError, ReportsCacheModel.DoesNotExist):
-      if self.SudsResult == None:
-        self.GetSudsResults()
+            return sorted_by_date
 
-      for sale in self.SudsResult:
-        sale_total = 0.0
-        payments = sale.Payments
-        salehour = str(sale.SaleDateTime.hour)
-        if len(salehour) == 1:
-          salehour = '0' + str(salehour)
-        else:
-          salehour = str(salehour)
-        for payment in payments:
-          sale_total += payment[1][0].Amount
-        if salehour not in sales:
-          sales[salehour] = sale_total
-        else:
-          sales[salehour] += sale_total
-      sale_totals_by_hour = sales
-      sale_by_hour = sorted(sale_totals_by_hour.items(), key=operator.itemgetter(0))
+    def get_totals_by_hour(self):
+        name = 'total_hour'
+        if not self.current:
+            name += '_nc'
+        sales = {}
 
-      report = ReportsCacheModel()
-      report.chart_name = name
-      report.data_string = str(sale_by_hour)
-      report.save()
+        try:
+            sale_by_hour = ReportsCacheModel.objects.filter(
+                datapull_datestamp=self.TodayDate, chart_name=name)[0]
+            return eval(sale_by_hour.data_string)
 
-      return sale_by_hour
+        except (IndexError, ReportsCacheModel.DoesNotExist):
+            if self.SudsResult == None:
+                self.GetSudsResults()
 
-  def get_totals_by_payment_type(self, comparison=0):
-    name = 'total_paymenttype'
-    if not self.current:
-      name += '_nc'
-    sales = {}
-    sale_list = ''
+            for sale in self.SudsResult:
+                sale_total = 0.0
+                payments = sale.Payments
+                salehour = str(sale.SaleDateTime.hour)
+                if len(salehour) == 1:
+                    salehour = '0' + str(salehour)
+                else:
+                    salehour = str(salehour)
+                for payment in payments:
+                    sale_total += payment[1][0].Amount
+                if salehour not in sales:
+                    sales[salehour] = sale_total
+                else:
+                    sales[salehour] += sale_total
+            sale_totals_by_hour = sales
+            sale_by_hour = sorted(sale_totals_by_hour.items(), key=operator.itemgetter(0))
 
-    try:
-      sorted_by_payment_type = ReportsCacheModel.objects.filter(datapull_datestamp=self.TodayDate, chart_name=name)[0]
-      return ast.literal_eval(sorted_by_payment_type.data_string)
+            report = ReportsCacheModel()
+            report.chart_name = name
+            report.data_string = str(sale_by_hour)
+            report.save()
 
-    except (IndexError, ReportsCacheModel.DoesNotExist):
-      if self.SudsResult == None:
-        self.GetSudsResults()
+            return sale_by_hour
 
-      for sale in self.SudsResult:
-        sale_total = 0.0
-        payments = sale.Payments
-        paytype = ""
-        for payment in payments:
-          paytype = str(payment[1][0].Type)
-          sale_total = payment[1][0].Amount
-        if paytype not in sales:
-          sales[paytype] = sale_total
-        else:
-          sales[paytype] += sale_total
-      sale_totals_by_payment_type = sales
-      sorted_by_payment_type = sorted(sale_totals_by_payment_type.items(), key=operator.itemgetter(1))
+    def get_totals_by_payment_type(self):
+        name = 'total_paymenttype'
+        if not self.current:
+            name += '_nc'
+        sales = {}
 
-      report = ReportsCacheModel()
-      report.chart_name = name
-      report.data_string = '\"' + str(sale_totals_by_payment_type) + '\"'
-      report.save()
+        try:
+            sorted_by_payment_type = ReportsCacheModel.objects.filter(
+                datapull_datestamp=self.TodayDate, chart_name=name)[0]
+            return ast.literal_eval(sorted_by_payment_type.data_string)
 
-      return sale_totals_by_payment_type.items
+        except (IndexError, ReportsCacheModel.DoesNotExist):
+            if self.SudsResult == None:
+                self.GetSudsResults()
+
+            for sale in self.SudsResult:
+                sale_total = 0.0
+                payments = sale.Payments
+                paytype = ""
+                for payment in payments:
+                    paytype = str(payment[1][0].Type)
+                    sale_total = payment[1][0].Amount
+                if paytype not in sales:
+                    sales[paytype] = sale_total
+                else:
+                    sales[paytype] += sale_total
+            sale_totals_by_payment_type = sales
+            sorted_by_payment_type = sorted(
+                sale_totals_by_payment_type.items(), key=operator.itemgetter(1))
+
+            report = ReportsCacheModel()
+            report.chart_name = name
+            report.data_string = '\"' + str(sale_totals_by_payment_type) + '\"'
+            report.save()
+
+            return sale_totals_by_payment_type.items
 
 
 def report_normalizer(report1, report2):
-  report1 = sorted(eval(report1).items(), key=operator.itemgetter(1))
-  report2 = sorted(eval(report2).items(), key=operator.itemgetter(1))
+    report1 = sorted(eval(report1).items(), key=operator.itemgetter(1))
+    report2 = sorted(eval(report2).items(), key=operator.itemgetter(1))
 
-  for i in report1:
-    exists = False
-    for k in report2:
-      if i[0] == k[0]:
-        exists = True
-    if not exists:
-      report2.insert(report1.index(i), (i[0], 0))
+    for i in report1:
+        exists = False
+        for k in report2:
+            if i[0] == k[0]:
+                exists = True
+        if not exists:
+            report2.insert(report1.index(i), (i[0], 0))
 
-  for i in report2:
-    exists = False
-    for k in report1:
-      if i[0] == k[0]:
-        exists = True
-    if not exists:
-      report1.insert(report2.index(i), (i[0], 0))
-  
-  return report1, report2
+    for i in report2:
+        exists = False
+        for k in report1:
+            if i[0] == k[0]:
+                exists = True
+        if not exists:
+            report1.insert(report2.index(i), (i[0], 0))
+
+    return report1, report2

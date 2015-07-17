@@ -20,18 +20,18 @@ from web import views as web
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
-    #custom
+    # custom
     # root views
     url(r'^web/', include('web.urls')),
 
-    #landing page
+    # landing page
     url(r'^$', web.landing, name='landing'),
 
-    #login/out links
-    url(r'^login$', 'django.contrib.auth.views.login', 
+    # login/out links
+    url(r'^login$', 'django.contrib.auth.views.login',
         {'template_name': 'login.html'},
         name='web_login'),
-    url(r'^logout$', 'django.contrib.auth.views.logout', 
+    url(r'^logout$', 'django.contrib.auth.views.logout',
         {'next_page': 'web_login'},
         name='web_logout')
 ]

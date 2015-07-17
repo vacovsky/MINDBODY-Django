@@ -2,13 +2,14 @@
    Much of the abstracted logic such as filling out credential objects and arrays
    resides in this class."""
 
-from mboapi_djangodemo.SECRETS import *
+from mboapi_djangodemo.SECRETS import SITEIDs, SOURCENAME, SOURCEPASS, USERNAME, USERPASS
 
 
 def BuildWsdlUrl(serviceName):
     """This function lets us grab the WSDL for any service we need."""
 
     return "https://api.mindbodyonline.com/0_5/" + serviceName + "Service.asmx?wsdl"
+
 
 def CreateStaffCredentials(service, user, password, siteIds):
     """This is a pretty basic method for generating a commonly used field (StaffCredentials)
@@ -22,6 +23,7 @@ def CreateStaffCredentials(service, user, password, siteIds):
         creds.SiteIDs = FillArrayType(service, siteIds, "Int")
 
         return creds
+
 
 def FillArrayType(service, elems, arrayType, elemName=None):
     """This method will create an 'ArrayOfX' object and then fill it with the array passed in.
@@ -40,6 +42,7 @@ def FillArrayType(service, elems, arrayType, elemName=None):
     else:
         return None
 
+
 def FillAbstractObject(service, objectType, valueDict):
     """This method is useful for creating the "cartItems" and "payments" fields of
        the CheckoutShoppingCart method. It takes in the array currently being built,
@@ -52,12 +55,14 @@ def FillAbstractObject(service, objectType, valueDict):
 
     return newObject
 
+
 def SetEnumerable(service, enum, value):
     """This method will generate and return an instance of enum.value."""
     if enum == None or value == None:
         return None
     else:
         return getattr(service.factory.create(enum), value)
+
 
 def FillDefaultCredentials(service, request, siteIDs=SITEIDs, source=SOURCENAME, spass=SOURCEPASS, user=USERNAME, upass=USERPASS):
     sourceCreds = service.factory.create('SourceCredentials')
@@ -71,9 +76,9 @@ def FillDefaultCredentials(service, request, siteIDs=SITEIDs, source=SOURCENAME,
     userCreds.SiteIDs.int = siteIDs
 
     request.SourceCredentials = sourceCreds
-    
+
     request.UserCredentials = userCreds
-    
+
     request.XMLDetail = "Full"
     request.PageSize = 25
     request.CurrentPageIndex = 0
@@ -82,8 +87,10 @@ def FillDefaultCredentials(service, request, siteIDs=SITEIDs, source=SOURCENAME,
 
 """Set siteIDs here to whichever site(s) you wish to make calls upon.
    This example represents site -99, the API Sandbox Site."""
+
+
 def CreateBasicRequest(service, requestName):
-    """Returns a request object defined by requestName in the WSDL with 
+    """Returns a request object defined by requestName in the WSDL with
        source and user credentials set."""
     request = service.factory.create(requestName)
 

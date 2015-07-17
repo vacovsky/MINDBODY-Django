@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = True
 
 # the SECRETS.py file doesnt exist.  Create it and fill in the declarations
-from .SECRETS import *
+from .SECRETS import MAIL_SERVER, MAIL_SERVER_USER, MAIL_SERVER_PASS, APPLICATION_SECRET
 
 EMAIL_HOST = MAIL_SERVER
 EMAIL_HOST_USER = MAIL_SERVER_USER
@@ -61,7 +61,7 @@ ROOT_URLCONF = 'mboapi_djangodemo.urls'
 PROJECT_DIR = os.path.dirname(__file__)
 
 TEMPLATE_DIRS = (os.path.join(PROJECT_DIR, "templates"),
-)
+                 )
 
 TEMPLATES = [
     {
@@ -90,9 +90,9 @@ USE_TZ = True
 
 DATABASES = {}
 
-#different settings based on system name
-if (socket.gethostname() != 'vacro' ) and (socket.gethostname() != 'joe-VirtualBox'):
-    DATABASES['default'] =  dj_database_url.config()
+# different settings based on system name
+if (socket.gethostname() != 'vacro') and (socket.gethostname() != 'joe-VirtualBox'):
+    DATABASES['default'] = dj_database_url.config()
     print(socket.gethostname())
     DEBUG = False
     STATIC_ROOT = 'staticfiles'
@@ -102,26 +102,22 @@ if (socket.gethostname() != 'vacro' ) and (socket.gethostname() != 'joe-VirtualB
 else:
     LOCAL_PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(LOCAL_PROJECT_DIR, 'testingdb.db'),
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(LOCAL_PROJECT_DIR, 'testingdb.db'),
         }
     }
     STATIC_ROOT = 'staticfiles'
     STATIC_URL = '/static/'
     STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-        
 
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ALLOWED_HOSTS = ['*']
 
-    
+
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 LOGIN_URL = '/web/login'
 LOGOUT_URL = '/web/logout'
 LOGIN_REDIRECT_URL = '/web/current'
-
-
-

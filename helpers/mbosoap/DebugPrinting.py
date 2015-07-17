@@ -11,8 +11,11 @@ logging.getLogger('suds.client').setLevel(logging.DEBUG)
 
 from suds.plugin import MessagePlugin
 
+
 class LogPlugin(MessagePlugin):
-  def sending(self, context):
-    print(str(context.envelope))
-  def received(self, context):
-    print(str(context.reply))
+
+    def sending(self, context):
+        print(str(context.envelope))
+
+    def received(self, context):
+        print(str(context.reply))

@@ -124,7 +124,7 @@ class ClientsReport:
                                 ages['65+'] += 1
                             else:
                                 ages['65+'] = 1
-                        
+
 
             clients_by_age_group = ages
             ages_by_group = sorted(clients_by_age_group.items(), key=operator.itemgetter(0))

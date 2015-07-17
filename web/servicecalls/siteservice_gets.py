@@ -1,9 +1,6 @@
 
-from helpers.mbosoap.SiteService import SiteServiceCalls, SiteServiceMethods
-from suds.sudsobject import asdict, Printer, items, footprint
-
+from helpers.mbosoap.SiteService import SiteServiceCalls
 
 def GetSessionTypes():
-  sessiontypes = SiteServiceCalls().GetSessionTypes()
-  return sessiontypes
-
+    sessiontypes = SiteServiceCalls().GetSessionTypes()
+    return sessiontypes
